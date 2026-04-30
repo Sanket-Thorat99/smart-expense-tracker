@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import {useState} from "react";
 import API from "../services/api";
 
 const Login = ()=>{
+    const navigate = useNavigate();
     const [form,setForm] = useState({
         email: "",
         password : ""
