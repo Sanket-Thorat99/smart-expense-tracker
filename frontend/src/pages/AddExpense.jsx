@@ -1,5 +1,7 @@
 import { useState } from "react";
 import API from "../services/api"; 
+import Navbar from "../components/Navbar";
+import bgImage from "../assets/bg.png";
 
 const AddExpense = () => {
   const [form, setForm] = useState({
@@ -38,7 +40,13 @@ const AddExpense = () => {
   };
 
   return (
-    <div>
+    <>
+    <Navbar />
+    <div
+      className="min-h-screen p-6 bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+    
       <h2>Add Expense</h2>
 
       <form onSubmit={handleSubmit}>
@@ -63,6 +71,7 @@ const AddExpense = () => {
         <button type="submit">Add</button>
       </form>
     </div>
+    </>
   );
 };
 

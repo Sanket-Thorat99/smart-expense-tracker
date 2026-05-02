@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { Pie } from "react-chartjs-2";
+import Navbar from "../components/Navbar";
+import bgImage from "../assets/bg.png";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -50,7 +52,11 @@ const Dashboard = () => {
   }, []);
 
   return (
-  <div className="min-h-screen bg-gray-100 p-6">
+    <><Navbar />
+  <div
+  className="min-h-screen p-6 bg-cover bg-center"
+  style={{ backgroundImage: `url(${bgImage})` }}
+>
 
     {/* HEADER */}
     <div className="flex justify-between items-center mb-6">
@@ -137,6 +143,7 @@ const Dashboard = () => {
     </div>
 
   </div>
+  </>
 );
 };
 
