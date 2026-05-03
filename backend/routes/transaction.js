@@ -106,4 +106,30 @@ transactionRouter.delete("/:id", authMiddleware, async (req, res) => {
   }
 });
 
+transactionRouter.get("/monthly", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const data = await Transaction.aggregate([
+      {
+        $match: { user: new mongoose.Types.ObjectId(userId) }
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          total: { $sum: "$amount" }
+        }
+      },
+      {
+        $sort: { "_id": 1 }
+      }
+    ]);
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
+  }
+});
+
 module.exports = transactionRouter;

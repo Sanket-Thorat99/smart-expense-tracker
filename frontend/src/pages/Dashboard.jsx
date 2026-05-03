@@ -1,20 +1,52 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import { Pie } from "react-chartjs-2";
+
 import Navbar from "../components/Navbar";
-import bgImage from "../assets/bg.png";
+import bgImage from "../assets/bg2.png";
+
+import { Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement
 } from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement
+);
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({});
+  const [budget, setBudget] = useState(0);
+  const [monthlyData, setMonthlyData] = useState([]);
+
+  const months = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+const chartDataMonthly = {
+  labels: monthlyData.map(d => months[d._id - 1]),
+  datasets: [
+    {
+      label: "Monthly Spending",
+      data: monthlyData.map(d => d.total),
+      borderWidth: 2
+    }
+  ]
+};
 
   const chartData = {
   labels: ["Necessary", "Unnecessary"],
@@ -28,6 +60,8 @@ const Dashboard = () => {
     ]
     };
 
+    const remaining = budget - (summary.totalExpense || 0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,6 +69,8 @@ const Dashboard = () => {
         setTransactions(res.data);
         const summaryRes = await API.get("/transactions/summary");
         setSummary(summaryRes.data);
+        const monthlyRes = await API.get("/transactions/monthly");
+        setMonthlyData(monthlyRes.data);
       } catch (err) {
         console.log(err.response);
       }
@@ -57,6 +93,17 @@ const Dashboard = () => {
   className="min-h-screen p-6 bg-cover bg-center"
   style={{ backgroundImage: `url(${bgImage})` }}
 >
+    <div className="mb-6 bg-white p-4 rounded-xl shadow">
+    <h3 className="mb-2 font-semibold">Set Monthly Budget</h3>
+
+    <input
+        type="number"
+        placeholder="Enter budget"
+        value={budget}
+        onChange={(e) => setBudget(e.target.value)}
+        className="border p-2 rounded w-full"
+    />
+    </div>
 
     {/* HEADER */}
     <div className="flex justify-between items-center mb-6">
@@ -94,12 +141,32 @@ const Dashboard = () => {
 
     </div>
 
+    <div className="mb-6">
+        {budget > 0 && (
+            remaining < 0 ? (
+            <div className="bg-red-100 text-red-700 p-4 rounded-lg">
+                ⚠️ You exceeded your budget by ₹{Math.abs(remaining)}
+            </div>
+            ) : (
+            <div className="bg-green-100 text-green-700 p-4 rounded-lg">
+                ✅ You are within budget. Remaining: ₹{remaining}
+            </div>
+            )
+        )}
+    </div>
+
     {/* CHART */}
     <div className="bg-white p-6 rounded-2xl shadow mb-6">
       <h3 className="font-semibold mb-4">📊 Spending Analysis</h3>
       <div className="w-72 mx-auto">
         <Pie data={chartData} />
       </div>
+    </div>
+
+    <div className="bg-white p-6 rounded-2xl shadow mb-6">
+    <h3 className="font-semibold mb-4">📈 Monthly Trend</h3>
+
+    <Line data={chartDataMonthly} />
     </div>
 
     {/* TRANSACTIONS */}
