@@ -1,30 +1,28 @@
 const express = require("express");
 const transactionRouter = express.Router();
 const Transaction = require("../models/Transaction");
+const mongoose = require("mongoose");
 const authMiddleware = require("../middleware/authMiddleware");
 
-transactionRouter.post("/",authMiddleware,async (req,res) => {
-    try{
-        const { title, amount, type, category, isNecessary } = req.body;
+transactionRouter.post("/", authMiddleware, async (req, res) => {
+  try {
+    const { title, amount, type, category, isNecessary } = req.body;
 
-        const newTransaction = new Transaction({
-        userId: req.user.id,
-        title,
-        amount,
-        type,
-        category,
-        isNecessary
-        });
+    const newTransaction = new Transaction({
+      userId: req.user.id,
+      title,
+      amount,
+      type,
+      category,
+      isNecessary,
+    });
 
-        await newTransaction.save();
+    await newTransaction.save();
 
-        res.json({ msg: "Transaction added", newTransaction });
-
-
-
-    }catch(err){
-        res.status(500).json({ msg: "Server error" });
-    }
+    res.json({ msg: "Transaction added", newTransaction });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 transactionRouter.get("/summary", authMiddleware, async (req, res) => {
@@ -35,7 +33,7 @@ transactionRouter.get("/summary", authMiddleware, async (req, res) => {
     let totalExpense = 0;
     let unnecessaryExpense = 0;
 
-    transactions.forEach(t => {
+    transactions.forEach((t) => {
       if (t.type === "income") {
         totalIncome += t.amount;
       } else {
@@ -66,20 +64,19 @@ transactionRouter.get("/summary", authMiddleware, async (req, res) => {
       unnecessaryExpense,
       savingsRate: `${savingsRate}%`,
       advice,
-      message: `You could have saved ₹${unnecessaryExpense}`
+      message: `You could have saved ₹${unnecessaryExpense}`,
     });
-
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
 });
 transactionRouter.get("/", authMiddleware, async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId: req.user.id })
-      .sort({ createdAt: -1 }); // latest first
+    const transactions = await Transaction.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    }); // latest first
 
     res.json(transactions);
-
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
@@ -100,7 +97,6 @@ transactionRouter.delete("/:id", authMiddleware, async (req, res) => {
     await transaction.deleteOne();
 
     res.json({ msg: "Transaction deleted successfully" });
-
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
@@ -112,21 +108,23 @@ transactionRouter.get("/monthly", authMiddleware, async (req, res) => {
 
     const data = await Transaction.aggregate([
       {
-        $match: { user: new mongoose.Types.ObjectId(userId) }
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          type: "expense",
+        },
       },
       {
         $group: {
           _id: { $month: "$createdAt" },
-          total: { $sum: "$amount" }
-        }
+          total: { $sum: "$amount" },
+        },
       },
       {
-        $sort: { "_id": 1 }
-      }
+        $sort: { _id: 1 },
+      },
     ]);
 
     res.json(data);
-
   } catch (err) {
     res.status(500).json({ msg: "Server Error" });
   }
