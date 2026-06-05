@@ -2,6 +2,7 @@ import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastProvider";
+import Footer from "../components/Footer";
 import bg from "../assets/SavemoreBG.png";
 import logo from "../assets/SaveMoreLogo.png";
 
@@ -46,7 +47,7 @@ const Register = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-3 py-4 sm:px-6 sm:py-8">
+    <div className="relative flex min-h-screen flex-col overflow-hidden px-3 py-4 sm:px-6 sm:py-8">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
         <img
           src={bg}
@@ -58,7 +59,7 @@ const Register = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-sky-100/40 via-white/10 to-indigo-100/40 dark:from-sky-950/30 dark:via-slate-950/20 dark:to-indigo-950/30" />
       </div>
 
-      <div className="mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-6xl items-stretch">
+      <div className="mx-auto flex flex-1 w-full max-w-6xl items-stretch">
         <div className="flex w-full flex-col rounded-3xl border border-slate-200/60 bg-white/55 shadow-lg backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/45">
           <header className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8 sm:py-5">
             <button
@@ -189,13 +190,10 @@ const Register = () => {
               </section>
             </div>
           </main>
-
-          <footer className="px-5 pb-5 text-center text-sm text-slate-600 dark:text-slate-300 sm:px-8">
-            © {new Date().getFullYear()} SaveMore. All rights reserved. | Terms
-            | Privacy | Contact
-          </footer>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

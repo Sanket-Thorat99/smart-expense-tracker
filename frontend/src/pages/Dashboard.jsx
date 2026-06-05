@@ -285,7 +285,7 @@ const Dashboard = () => {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-200">
-            Dashboard
+            
           </p>
           <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-3xl">
             Your spending at a glance
