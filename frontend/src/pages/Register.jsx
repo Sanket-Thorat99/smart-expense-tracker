@@ -2,7 +2,6 @@ import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastProvider";
-import Footer from "../components/Footer";
 import bg from "../assets/SavemoreBG.png";
 import logo from "../assets/SaveMoreLogo.png";
 
@@ -192,8 +191,6 @@ const Register = () => {
           </main>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

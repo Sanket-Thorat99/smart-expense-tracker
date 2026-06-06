@@ -132,7 +132,7 @@ export default function Footer() {
               LinkedIn
             </a>
             <a
-              href="https://github.com/Sanket-Thorat99/smart-expense-tracker"
+              href="https://github.com/Sanket-Thorat99"
               className="transition hover:text-indigo-700 dark:hover:text-indigo-300"
             >
               GitHub

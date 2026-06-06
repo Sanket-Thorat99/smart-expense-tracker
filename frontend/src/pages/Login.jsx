@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import API from "../services/api";
 import { useToast } from "../components/ToastProvider";
-import Footer from "../components/Footer";
 import bg from "../assets/SavemoreBG.png";
 import logo from "../assets/SaveMoreLogo.png";
 
@@ -199,8 +198,6 @@ const Login = () => {
           </main>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
